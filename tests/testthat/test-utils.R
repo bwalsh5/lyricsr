@@ -21,26 +21,26 @@ test_that("default_excluded_terms matches the Python package", {
 
 search_response <- list(sections = list(
   list(type = "top_hit", hits = list(
-    list(index = "song", result = list(id = 1, title = "To You (Tracklist)", lyrics_state = "complete",
-                                       primary_artist = list(name = "Andy Shauf")))
+    list(index = "song", result = list(id = 1, title = "HUMBLE. (Tracklist)", lyrics_state = "complete",
+                                       primary_artist = list(name = "Kendrick Lamar")))
   )),
   list(type = "song", hits = list(
-    list(index = "song", result = list(id = 1, title = "To You (Tracklist)", lyrics_state = "complete",
-                                       primary_artist = list(name = "Andy Shauf"))),
-    list(index = "song", result = list(id = 2, title = "To You", lyrics_state = "complete",
+    list(index = "song", result = list(id = 1, title = "HUMBLE. (Tracklist)", lyrics_state = "complete",
+                                       primary_artist = list(name = "Kendrick Lamar"))),
+    list(index = "song", result = list(id = 2, title = "HUMBLE.", lyrics_state = "complete",
                                        primary_artist = list(name = "Someone Else"))),
-    list(index = "song", result = list(id = 3, title = "To You", lyrics_state = "complete",
-                                       primary_artist = list(name = "Andy Shauf")))
+    list(index = "song", result = list(id = 3, title = "HUMBLE.", lyrics_state = "complete",
+                                       primary_artist = list(name = "Kendrick Lamar")))
   )),
   list(type = "artist", hits = list(
-    list(index = "artist", result = list(id = 10, name = "Andy Shauf"))
+    list(index = "artist", result = list(id = 10, name = "Kendrick Lamar"))
   ))
 ))
 
 test_that("pick_search_hit prefers an exact title and artist match", {
-  expect_equal(pick_search_hit(search_response, "To You", "song", "title", artist = "Andy Shauf")$id, 3)
-  expect_equal(pick_search_hit(search_response, "To You", "song", "title")$id, 2)
-  expect_equal(pick_search_hit(search_response, "andy shauf", "artist", "name")$id, 10)
+  expect_equal(pick_search_hit(search_response, "HUMBLE.", "song", "title", artist = "Kendrick Lamar")$id, 3)
+  expect_equal(pick_search_hit(search_response, "HUMBLE.", "song", "title")$id, 2)
+  expect_equal(pick_search_hit(search_response, "kendrick lamar", "artist", "name")$id, 10)
 })
 
 test_that("pick_search_hit returns NULL when the artist never matches", {

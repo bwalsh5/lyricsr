@@ -29,10 +29,10 @@
 #' @export
 #' @examples
 #' \dontrun{
-#' song <- search_song("To You", "Andy Shauf")
+#' song <- search_song("HUMBLE.", "Kendrick Lamar")
 #' cat(song$lyrics)
 #'
-#' search_song(c("To You", "Quite Like You", "Martha Sways"), "Andy Shauf")
+#' search_song(c("HUMBLE.", "Alright", "Swimming Pools (Drank)"), "Kendrick Lamar")
 #' }
 search_song <- function(title = NULL, artist = NULL, song_id = NULL,
                         get_full_info = TRUE, skip_non_songs = TRUE,
@@ -144,8 +144,8 @@ search_one_song <- function(title = NULL, artist = "", song_id = NULL,
 #' @export
 #' @examples
 #' \dontrun{
-#' shauf <- search_artist("Andy Shauf", max_songs = 10)
-#' shauf[, c("title", "album", "release_date")]
+#' kendrick <- search_artist("Kendrick Lamar", max_songs = 10)
+#' kendrick[, c("title", "album", "release_date")]
 #' }
 search_artist <- function(artist_name = NULL, max_songs = NULL,
                           sort = c("popularity", "title", "release_date"),
@@ -252,8 +252,8 @@ find_artist_id <- function(artist_name, max_pages = 10, allow_name_change = TRUE
 #' @export
 #' @examples
 #' \dontrun{
-#' party <- search_album("The Party", "Andy Shauf")
-#' party[, c("track_number", "title")]
+#' damn <- search_album("DAMN.", "Kendrick Lamar")
+#' damn[, c("track_number", "title")]
 #' }
 search_album <- function(name = NULL, artist = NULL, album_id = NULL,
                          get_full_info = FALSE, remove_section_headers = FALSE,

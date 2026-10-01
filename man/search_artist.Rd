@@ -79,7 +79,7 @@ the artist, pages through their songs, and downloads lyrics for each.
 }
 \examples{
 \dontrun{
-shauf <- search_artist("Andy Shauf", max_songs = 10)
-shauf[, c("title", "album", "release_date")]
+kendrick <- search_artist("Kendrick Lamar", max_songs = 10)
+kendrick[, c("title", "album", "release_date")]
 }
 }

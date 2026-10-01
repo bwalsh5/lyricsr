@@ -3,23 +3,23 @@
 test_that("search_song finds a song and its lyrics", {
   skip_if_no_genius()
   withr::local_options(lyricsr.cache_dir = withr::local_tempdir())
-  song <- search_song("To You", "Andy Shauf")
+  song <- search_song("HUMBLE.", "Kendrick Lamar")
   expect_equal(nrow(song), 1)
-  expect_equal(song$artist, "Andy Shauf")
-  expect_equal(song$album, "The Party")
+  expect_equal(song$artist, "Kendrick Lamar")
+  expect_equal(song$album, "DAMN.")
   expect_equal(song$lyrics_source, "genius")
-  expect_match(song$lyrics, "Jeremy")
+  expect_match(song$lyrics, "sit down")
 })
 
 test_that("search_artist and search_album return songs", {
   skip_if_no_genius()
   withr::local_options(lyricsr.cache_dir = withr::local_tempdir())
-  artist <- search_artist("Andy Shauf", max_songs = 2, fetch_lyrics = FALSE, verbose = FALSE)
+  artist <- search_artist("Kendrick Lamar", max_songs = 2, fetch_lyrics = FALSE, verbose = FALSE)
   expect_equal(nrow(artist), 2)
-  expect_true(all(artist$artist == "Andy Shauf"))
+  expect_true(all(artist$artist == "Kendrick Lamar"))
 
-  album <- search_album("The Party", "Andy Shauf")
-  expect_equal(album$track_number, 1:10)
+  album <- search_album("DAMN.", "Kendrick Lamar")
+  expect_equal(album$track_number, 1:14)
   expect_true(all(!is.na(album$lyrics)))
 })
 

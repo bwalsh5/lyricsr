@@ -58,9 +58,9 @@ or one artist per title) to get one row per song found.
 }
 \examples{
 \dontrun{
-song <- search_song("To You", "Andy Shauf")
+song <- search_song("HUMBLE.", "Kendrick Lamar")
 cat(song$lyrics)
 
-search_song(c("To You", "Quite Like You", "Martha Sways"), "Andy Shauf")
+search_song(c("HUMBLE.", "Alright", "Swimming Pools (Drank)"), "Kendrick Lamar")
 }
 }
