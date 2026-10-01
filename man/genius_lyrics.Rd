@@ -8,7 +8,7 @@ genius_lyrics(song_url = NULL, song_id = NULL, remove_section_headers = FALSE)
 }
 \arguments{
 \item{song_url}{A Genius song URL, e.g.
-\code{"https://genius.com/Andy-shauf-to-you-lyrics"}.}
+\code{"https://genius.com/Kendrick-lamar-humble-lyrics"}.}
 
 \item{song_id}{A Genius song ID. Used to look up the URL if \code{song_url}
 isn't given.}
@@ -31,6 +31,6 @@ same song again doesn't hit Genius.
 }
 \examples{
 \dontrun{
-cat(genius_lyrics("https://genius.com/Andy-shauf-to-you-lyrics"))
+cat(genius_lyrics("https://genius.com/Kendrick-lamar-humble-lyrics"))
 }
 }

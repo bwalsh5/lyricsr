@@ -43,7 +43,7 @@ The R equivalent of \code{Genius.search_album()} in the Python package.
 }
 \examples{
 \dontrun{
-party <- search_album("The Party", "Andy Shauf")
-party[, c("track_number", "title")]
+damn <- search_album("DAMN.", "Kendrick Lamar")
+damn[, c("track_number", "title")]
 }
 }

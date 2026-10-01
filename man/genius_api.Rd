@@ -70,7 +70,7 @@ Most people want the higher-level \code{\link[=search_song]{search_song()}}, \co
 }
 \examples{
 \dontrun{
-res <- genius_search("Andy Shauf")
+res <- genius_search("Kendrick Lamar")
 genius_song(378195)$title
 genius_artist_songs(2020, per_page = 5)$songs
 }

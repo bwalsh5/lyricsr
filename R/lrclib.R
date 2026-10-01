@@ -17,7 +17,7 @@
 #' @export
 #' @examples
 #' \dontrun{
-#' cat(lrclib_lyrics("To You", "Andy Shauf"))
+#' cat(lrclib_lyrics("HUMBLE.", "Kendrick Lamar"))
 #' }
 lrclib_lyrics <- function(title, artist, album = NULL, synced = FALSE) {
   key <- paste("lrclib", title, artist, album %||% "", sep = "\r")

@@ -8,7 +8,7 @@
 #' same song again doesn't hit Genius.
 #'
 #' @param song_url A Genius song URL, e.g.
-#'   `"https://genius.com/Andy-shauf-to-you-lyrics"`.
+#'   `"https://genius.com/Kendrick-lamar-humble-lyrics"`.
 #' @param song_id A Genius song ID. Used to look up the URL if `song_url`
 #'   isn't given.
 #' @param remove_section_headers If `TRUE`, removes `[Chorus]`, `[Verse 1]`,
@@ -18,7 +18,7 @@
 #' @export
 #' @examples
 #' \dontrun{
-#' cat(genius_lyrics("https://genius.com/Andy-shauf-to-you-lyrics"))
+#' cat(genius_lyrics("https://genius.com/Kendrick-lamar-humble-lyrics"))
 #' }
 genius_lyrics <- function(song_url = NULL, song_id = NULL,
                           remove_section_headers = FALSE) {

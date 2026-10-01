@@ -31,6 +31,6 @@ before mixing the two in an analysis.
 }
 \examples{
 \dontrun{
-cat(lrclib_lyrics("To You", "Andy Shauf"))
+cat(lrclib_lyrics("HUMBLE.", "Kendrick Lamar"))
 }
 }

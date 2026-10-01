@@ -4,6 +4,7 @@ An R package to search [Genius](https://genius.com) for songs, artists, and albu
 get their lyrics as tibbles.
 
 - [Installation](#installation)
+- [Usage](#usage): a step-by-step walkthrough and function reference
 - [Downloading lyrics](#downloading-lyrics): [by song](#by-song), [by album](#by-album), [by artist](#by-artist), [by genre](#by-genre)
 - [Cleaning up results](#cleaning-up-results): duplicates, soundtracks, singles, mono releases, live versions, and more
 - [Saving to CSV](#saving-to-csv)
@@ -22,6 +23,148 @@ Or from a local copy: `devtools::install("path/to/lyricsr")`.
 
 No Genius API token or account is needed. lyricsr uses the same public API
 that genius.com itself uses.
+
+## Usage
+
+### Step by step
+
+Most projects follow the same five steps: download, clean, check, save,
+analyze.
+
+**1. Load the package.**
+
+```r
+library(lyricsr)
+```
+
+**2. Download songs.** Choose one of these, depending on what you're
+studying:
+
+```r
+songs <- search_song(c("HUMBLE.", "Alright"), "Kendrick Lamar")      # specific songs
+songs <- search_album("DAMN.", "Kendrick Lamar")                     # one album
+songs <- search_artist("Kendrick Lamar")                             # an artist's catalog
+songs <- search_genre("country", max_songs = 200)                    # a genre
+```
+
+Progress is printed as songs are collected. The result is a tibble with one
+row per song. Open it in RStudio's or Positron's data viewer with
+`View(songs)`.
+
+To combine several artists, download each and bind the results:
+
+```r
+songs <- rbind(
+  search_artist("Kendrick Lamar", max_songs = 50),
+  search_artist("Big Thief", max_songs = 50)
+)
+```
+
+**3. Remove duplicates and releases you don't want.** Artist catalogs in
+particular include live versions, demos, remixes, remasters, and songs from
+soundtracks and compilations:
+
+```r
+clean <- filter_songs(songs)
+#> Removed 12 of 60 songs (4 live, 3 demos, 5 duplicates); 48 left.
+
+# Or choose exactly what to remove
+clean <- filter_songs(songs, remove = c("duplicates", "live", "demos", "remixes",
+                                        "soundtracks", "compilations", "singles", "mono"))
+```
+
+See [Cleaning up results](#cleaning-up-results) for all the categories.
+
+**4. Check what was removed.** Detection is keyword-based, so look before
+relying on it:
+
+```r
+flags <- flag_songs(songs)
+View(flags)                                  # one TRUE/FALSE column per category
+flags[flags$is_live, c("title", "album")]    # e.g. everything flagged as live
+```
+
+**5. Save or analyze.**
+
+```r
+save_lyrics(clean, "lyrics.csv")             # artist, album, release_date, title, lyrics
+lines <- tidy_lyrics(clean)                  # one row per lyric line, for text analysis
+```
+
+### A complete script
+
+```r
+library(lyricsr)
+
+# Download
+songs <- search_artist("Kendrick Lamar")
+
+# Clean: one studio version of each song
+songs <- filter_songs(songs, remove = c("duplicates", "live", "demos", "remixes",
+                                        "soundtracks", "compilations"))
+
+# Save
+save_lyrics(songs, "kendrick_lamar.csv")
+save_lyrics(songs, "kendrick_lamar_lines.csv", by_line = TRUE)
+```
+
+The first run downloads everything. Later runs use the cache and finish in
+seconds, so you can adjust the filters and rerun the whole script freely.
+
+### Function reference
+
+| Task | Function |
+|---|---|
+| **Download** | |
+| Songs by title (and artist) | `search_song(title, artist)` |
+| An album's tracks | `search_album(name, artist)` |
+| An artist's songs | `search_artist(name, max_songs)` |
+| A genre's most popular songs | `search_genre(genre, max_songs)` |
+| Lyrics for one URL | `genius_lyrics(song_url)` |
+| Lyrics from LRCLIB | `lrclib_lyrics(title, artist)` |
+| **Clean** | |
+| Remove categories and duplicates | `filter_songs(songs, remove)` |
+| Remove only duplicates | `distinct_songs(songs)` |
+| Flag songs without removing them | `flag_songs(songs)` |
+| Title terms that mark non-songs | `default_excluded_terms()` |
+| **Save and analyze** | |
+| Write a CSV | `save_lyrics(songs, path)` |
+| One row per lyric line | `tidy_lyrics(songs)` |
+| **Cache** | |
+| Where downloads are cached | `genius_cache_dir()` |
+| Clear the cache | `genius_cache_clear()` |
+| **Low-level Genius API** | |
+| Raw search, song, artist, album, and tag data | `genius_search()`, `genius_song()`, `genius_artist()`, `genius_artist_songs()`, `genius_album()`, `genius_album_tracks()`, `genius_tag()` |
+
+### Getting help
+
+Every function has a help page with all its arguments and examples:
+
+```r
+?search_artist
+?filter_songs        # includes the full list of categories
+?save_lyrics
+help(package = "lyricsr")
+```
+
+### Working on the package locally
+
+To try changes without installing, open the `lyricsr` folder in Positron or
+RStudio (in Positron: **File → Open Folder…**) and load it:
+
+```r
+devtools::load_all()   # or Cmd/Ctrl+Shift+L
+```
+
+Run `load_all()` again after editing files in `R/`. Other shortcuts:
+
+| Task | Shortcut | Console |
+|---|---|---|
+| Load the package | Cmd/Ctrl+Shift+L | `devtools::load_all()` |
+| Run tests | Cmd/Ctrl+Shift+T | `devtools::test()` |
+| Rebuild help pages | Cmd/Ctrl+Shift+D | `devtools::document()` |
+| Full package check | Cmd/Ctrl+Shift+E | `devtools::check()` |
+| Install | Cmd/Ctrl+Shift+B | `devtools::install()` |
 
 ## Downloading lyrics
 
@@ -42,15 +185,15 @@ Every download function returns a tibble with one row per song:
 ### By song
 
 ```r
-song <- search_song("To You", "Andy Shauf")
+song <- search_song("HUMBLE.", "Kendrick Lamar")
 cat(song$lyrics)
 
 # Several at once: title and artist are vectorised
-songs <- search_song(c("To You", "Quite Like You", "Martha Sways"), "Andy Shauf")
+songs <- search_song(c("HUMBLE.", "Alright", "Swimming Pools (Drank)"), "Kendrick Lamar")
 
 # By Genius ID, or just the lyrics from a URL
-search_song(song_id = 2857381)
-genius_lyrics("https://genius.com/Andy-shauf-to-you-lyrics")
+search_song(song_id = 3039923)
+genius_lyrics("https://genius.com/Kendrick-lamar-humble-lyrics")
 ```
 
 Songs that can't be found are skipped with a warning.
@@ -58,15 +201,15 @@ Songs that can't be found are skipped with a warning.
 ### By album
 
 ```r
-party <- search_album("The Party", "Andy Shauf")
-party[c("track_number", "title", "release_date")]
-#>    track_number title               release_date
-#>  1            1 The Magician        2016-05-20
-#>  2            2 Early to the Party  2016-05-20
+damn <- search_album("DAMN.", "Kendrick Lamar")
+damn[c("track_number", "title", "release_date")]
+#>    track_number title   release_date
+#>  1            1 BLOOD.  2017-04-14
+#>  2            2 DNA.    2017-04-14
 #>  ...
 
-# By Genius album ID
-search_album(album_id = 152674)
+# By Genius album ID (every result has an album_id column)
+search_album(album_id = damn$album_id[1])
 ```
 
 Albums come back in track order, with a `track_number` column. Use
@@ -77,7 +220,7 @@ Albums come back in track order, with a `track_number` column. Use
 
 ```r
 # Top 50 songs by popularity
-shauf <- search_artist("Andy Shauf", max_songs = 50)
+kendrick <- search_artist("Kendrick Lamar", max_songs = 50)
 
 # Everything, oldest first
 beatles <- search_artist("The Beatles", sort = "release_date")
@@ -118,8 +261,8 @@ To get only one genre from an artist or album, filter on the `genre` or
 `tags` column:
 
 ```r
-shauf[shauf$genre == "Rock", ]
-shauf[grepl("Folk", shauf$tags), ]
+kendrick[kendrick$genre == "Rap", ]
+kendrick[grepl("West Coast", kendrick$tags), ]
 ```
 
 ### Common options
@@ -283,10 +426,10 @@ A typical workflow for an artist:
 ```r
 library(lyricsr)
 
-songs <- search_artist("Andy Shauf")
+songs <- search_artist("Kendrick Lamar")
 songs <- filter_songs(songs, remove = c("duplicates", "live", "demos", "remixes",
                                         "soundtracks", "compilations", "singles"))
-save_lyrics(songs, "andy_shauf.csv")
+save_lyrics(songs, "kendrick_lamar.csv")
 ```
 
 For a genre:

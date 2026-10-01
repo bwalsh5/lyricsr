@@ -24,7 +24,7 @@
 #' @name genius_api
 #' @examples
 #' \dontrun{
-#' res <- genius_search("Andy Shauf")
+#' res <- genius_search("Kendrick Lamar")
 #' genius_song(378195)$title
 #' genius_artist_songs(2020, per_page = 5)$songs
 #' }
